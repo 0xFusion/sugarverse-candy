@@ -11,16 +11,14 @@ import "@openzeppelin/contracts/security/Pausable.sol";
  * @dev An ERC20 token contract that supports burning, capping, ownership management, and pausing.
  */
 contract AirdropCandyToken is ERC20Burnable, ERC20Capped, Ownable, Pausable {
-    uint256 private constant TOTAL_SUPPLY = 437_500_000 * 10 ** 18;
-    uint256 private constant INITIAL_MINT = 62_500_000 * 10 ** 18;
 
     /**
      * @dev Initializes the AirdropCandyToken contract.
      * @param _owner The initial owner of the contract.
      */
-    constructor(address _owner) ERC20Capped(TOTAL_SUPPLY) ERC20("Airdrop CNDY", "AIRDROPCNDY") {
+    constructor(address _owner, uint256 _initialMint, uint256 _maxSupply) ERC20Capped(_maxSupply) ERC20("Airdrop CNDY", "AIRDROPCNDY") {
         _transferOwnership(_owner);
-        _mint(owner(), INITIAL_MINT);
+        _mint(owner(), _initialMint);
     }
 
     /**
@@ -30,6 +28,25 @@ contract AirdropCandyToken is ERC20Burnable, ERC20Capped, Ownable, Pausable {
      */
     function mint(address to, uint256 amount) public virtual onlyOwner {
         _mint(to, amount);
+    }
+
+    /**
+     * @dev Burns a specific amount of tokens owned by the caller.
+     * @param amount The amount of tokens to burn.
+     * @notice This function burns the specified amount of tokens from the caller's balance.
+     */
+    function burn(uint256 amount) public virtual override whenNotPaused {
+        super.burn(amount);
+    }
+
+    /**
+     * @dev Burns a specific amount of tokens from the specified account.
+     * @param account The address whose tokens will be burned.
+     * @param amount The amount of tokens to burn.
+     * @notice This function burns the specified amount of tokens from the provided account's balance.
+     */
+    function burnFrom(address account, uint256 amount) public virtual override whenNotPaused {
+        super.burnFrom(account, amount);
     }
 
     /**

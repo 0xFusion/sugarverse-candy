@@ -1,12 +1,14 @@
 const hre = require("hardhat");
 
 async function main() {
-  console.log("Starting deploy CNDY Aairdrop Token...");
+  console.log("Starting deploy CNDY Airdrop Token...");
   const AirdropCandyToken = await hre.ethers.getContractFactory(
     "AirdropCandyToken"
   );
   const airdropCandyToken = await AirdropCandyToken.deploy(
-    process.env.OWNER_ADDRESS
+    process.env.OWNER_ADDRESS,
+    process.env.INITIAL_MINT,
+    process.env.MAX_SUPPLY
   );
 
   await airdropCandyToken.deployed();
